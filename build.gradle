@@ -1,0 +1,97 @@
+// Description: Gradle build file for the simulator
+
+// The plugins block is where you apply plugins to your project.
+plugins {
+    // The id 'java' plugin is used to build Java projects.
+    id 'java'
+    // The id 'application' plugin is used to build Java applications.
+    id 'application'
+    // The id 'org.openjfx.javafxplugin' plugin is used to build JavaFX applications.
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+// The group and version properties are used by the 'java' plugin to determine the name of the generated jar file.
+group 'fr.lr.industries.blackhole.merge'
+version '1.0-SNAPSHOT'
+
+// The mainClassName property is used by the 'application' plugin to determine your application's main class.
+mainClassName = 'fr.lr.industries.blackhole.merge.Simulator'
+
+// The repositories block is where you declare the repositories to be used by your build.
+repositories {
+    // The mavenCentral() method is used to declare the Maven Central repository.
+    mavenCentral()
+}
+
+// The dependencies block is where you declare the dependencies for your production and test code.
+dependencies {
+    // JavaFX graphics library for Windows, Linux and Mac are required to be able to run the simulator.
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac"
+
+    // JavaFX base library for Windows, Linux and Mac
+    runtimeOnly "org.openjfx:javafx-base:$javafx.version:win"
+    runtimeOnly "org.openjfx:javafx-base:$javafx.version:linux"
+    runtimeOnly "org.openjfx:javafx-base:$javafx.version:mac"
+
+    // JavaFX controls library for Windows, Linux and Mac
+    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:win"
+    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:linux"
+    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:mac"
+}
+
+// The jar block is where you configure the jar task.
+jar {
+    // The duplicatesStrategy property is where you configure the strategy to use when there are duplicate files in the jar file.
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    // The manifest block is where you configure the manifest of the jar file.
+    manifest {
+        // The attributes block is where you configure the attributes of the manifest, in this case the main class.
+        attributes 'Main-Class': mainClassName
+    }
+
+    // The from block is where you configure the files to include in the jar file.
+    from {
+        // The configurations.runtimeClasspath property is used to get the runtime classpath of the project.
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+// The javafx block is where you configure the JavaFX plugin.
+javafx {
+    // The version property is where you specify the version of JavaFX to use.
+    version = "20"
+    // The modules property is where you specify the modules to use.
+    modules = [ 'javafx.controls']
+}
+
+// This task is used to count the number of lines of code in the project.
+task countTotalLines {
+    // The doLast block is where you specify the code to execute when the task is run.
+    doLast {
+        // The sourceSets property is used to get the source sets of the project.
+        def sourceSets = sourceSets.main
+        // The sourceDirs property is used to get the source directories of the source set.
+        def sourceDirs = sourceSets.java.srcDirs
+        // The lines variable is used to count the number of lines of code.
+        def lines = 0
+
+        // We traverse the source directories and count the number of lines of code.
+        sourceDirs.each { sourceDir ->
+            // The traverse method is used to traverse the files in the source directory.
+            sourceDir.traverse(type: groovy.io.FileType.FILES, nameFilter: ~/.*\.java$/) { file ->
+                // Add the number of lines of code in the file to the total number of lines.
+                lines += file.text.split("\n").size()
+            }
+        }
+
+        // Print the total number of lines of code.
+        println "Total number of lines: $lines"
+    }
+}
+
+// Here we make sure that the encoding is set to UTF-8 for all JavaCompile tasks.
+compileJava.options.encoding('UTF-8')
+tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
