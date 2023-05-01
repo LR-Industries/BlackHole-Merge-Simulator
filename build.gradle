@@ -1,18 +1,18 @@
-// Description: Gradle build file for the simulator
-
 // The plugins block is where you apply plugins to your project.
 plugins {
-    // The id 'java' plugin is used to build Java projects.
+    // The 'java' plugin is used to build Java projects.
     id 'java'
-    // The id 'application' plugin is used to build Java applications.
+    // The 'application' plugin is used to build Java applications.
     id 'application'
-    // The id 'org.openjfx.javafxplugin' plugin is used to build JavaFX applications.
+    // The 'org.openjfx.javafxplugin' plugin is used to build JavaFX applications.
     id 'org.openjfx.javafxplugin' version '0.0.13'
+    // The 'edu.sc.seis.launch4j' plugin is used to build Windows executables from the current project.
+    id 'edu.sc.seis.launch4j' version '2.5.4'
 }
 
 // The group and version properties are used by the 'java' plugin to determine the name of the generated jar file.
 group 'fr.lr.industries.blackhole.merge'
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 // The mainClassName property is used by the 'application' plugin to determine your application's main class.
 mainClassName = 'fr.lr.industries.blackhole.merge.Simulator'
@@ -21,24 +21,6 @@ mainClassName = 'fr.lr.industries.blackhole.merge.Simulator'
 repositories {
     // The mavenCentral() method is used to declare the Maven Central repository.
     mavenCentral()
-}
-
-// The dependencies block is where you declare the dependencies for your production and test code.
-dependencies {
-    // JavaFX graphics library for Windows, Linux and Mac are required to be able to run the simulator.
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac"
-
-    // JavaFX base library for Windows, Linux and Mac
-    runtimeOnly "org.openjfx:javafx-base:$javafx.version:win"
-    runtimeOnly "org.openjfx:javafx-base:$javafx.version:linux"
-    runtimeOnly "org.openjfx:javafx-base:$javafx.version:mac"
-
-    // JavaFX controls library for Windows, Linux and Mac
-    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:win"
-    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:linux"
-    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:mac"
 }
 
 // The jar block is where you configure the jar task.
@@ -57,6 +39,35 @@ jar {
         // The configurations.runtimeClasspath property is used to get the runtime classpath of the project.
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+// The launch4j block is where you configure the launch4j task.
+launch4j {
+    // The headerType property is where you configure the type of header to use for the executable.
+    headerType = "gui"
+    // The mainClassName property is where you configure the main class of the executable.
+    mainClassName = mainClassName
+    // The outfile property is where you configure the name of the executable.
+    outfile = "${rootProject.name}-${project.version}.exe"
+    // The icon property is where you configure the icon of the executable.
+    icon = "${projectDir}/src/main/resources/images/black-hole.ico"
+    // The jvmOptions property is where you configure the JVM options of the executable.
+    jvmOptions = ["-Xms512M -Xmx2G --module-path javafx-sdk-20\\lib --add-modules javafx.controls,jdk.incubator.vector -Dfile.encoding=UTF-8 -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+UnlockDiagnosticVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -XX:-UseBiasedLocking -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:+UseJVMCICompiler -XX:+EagerJVMCI -XX:UseAVX=2 -XX:+UseStringDeduplication -XX:+UseFastUnorderedTimeStamps -XX:+UseAES -XX:+UseAESIntrinsics -XX:UseSSE=4 -XX:AllocatePrefetchStyle=1 -XX:+UseLoopPredicate -XX:+RangeCheckElimination -XX:+EliminateLocks -XX:+DoEscapeAnalysis -XX:+UseCodeCacheFlushing -XX:+UseFastJNIAccessors -XX:+OptimizeStringConcat -XX:+UseCompressedOops -XX:+UseThreadPriorities -XX:+OmitStackTraceInFastThrow -XX:+TrustFinalNonStaticFields -XX:ThreadPriorityPolicy=1 -XX:+UseInlineCaches -XX:+RewriteBytecodes -XX:+RewriteFrequentPairs -XX:+UseNUMA -XX:-DontCompileHugeMethods -XX:+UseCMoveUnconditionally -XX:+UseFPUForSpilling -XX:+UseNewLongLShift -XX:+UseVectorCmov -XX:+UseXMMForArrayCopy -XX:+UseXmmI2D -XX:+UseXmmI2F -XX:+UseXmmLoadAndClearUpper -XX:+UseXmmRegToRegMoveAll -Djdk.nio.maxCachedBufferSize=262144 -Dgraal.TuneInlinerExploration=1 -Dgraal.CompilerConfiguration=enterprise -Dgraal.UsePriorityInlining=true -Dgraal.Vectorization=true -Dgraal.OptDuplication=true -Dgraal.DetectInvertedLoopsAsCounted=true -Dgraal.LoopInversion=true -Dgraal.VectorizeHashes=true -Dgraal.EnterprisePartialUnroll=true -Dgraal.VectorizeSIMD=true -Dgraal.StripMineNonCountedLoops=true -Dgraal.SpeculativeGuardMovement=true -Dgraal.InfeasiblePathCorrelation=true"]
+    // The version and textVersion properties are where you configure the version of the executable.
+    version = "${project.version}"
+    textVersion = "${project.version}"
+    // The copyright property is where you configure the copyright of the executable.
+    copyright = "LR-Industries"
+    // The companyName property is where you configure the company name of the executable.
+    companyName = "LR-Industries"
+    // The description property is where you configure the description of the executable.
+    fileDescription = "A nice BlackHole-Merge-Simulator"
+    // The bundledJre64Bit property is where you configure whether to bundle a 64-bit JRE with the executable.
+    bundledJre64Bit = true
+    // The bundledJreAsFallback property is where you configure whether to use the bundled JRE as a fallback.
+    bundledJreAsFallback = true
+    // The bundledJrePath property is where you configure the path to the bundled JRE.
+    bundledJrePath = "${projectDir}/runner/graalvm-ee-java17-22.3.0/"
 }
 
 // The javafx block is where you configure the JavaFX plugin.
