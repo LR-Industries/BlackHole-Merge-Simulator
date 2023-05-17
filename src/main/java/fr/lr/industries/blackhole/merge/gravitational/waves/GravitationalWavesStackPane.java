@@ -193,7 +193,7 @@ public class GravitationalWavesStackPane implements StackPaneMaker {
                             final SourceDataLine finalLine = line;
 
                             // Create a new thread to play the sound
-                            final Thread soundThread = new Thread(() -> {
+                            new Thread(() -> {
                                 // Create a new byte array with the specified size
                                 final byte[] buffer = new byte[44100 * DURATION / 1000];
                                 // Loop through the byte array
@@ -211,9 +211,7 @@ public class GravitationalWavesStackPane implements StackPaneMaker {
                                 finalLine.stop();
                                 // Close the line
                                 finalLine.close();
-                            });
-                            // Start the thread
-                            soundThread.start();
+                            }).start(); // Start the thread
                         }
                     }
                 }

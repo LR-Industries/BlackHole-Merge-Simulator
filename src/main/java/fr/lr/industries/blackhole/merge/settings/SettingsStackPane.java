@@ -84,8 +84,13 @@ public class SettingsStackPane implements StackPaneMaker {
         // Create a graphics context to draw on the canvas
         final GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        // Preserve the ratio of the logo when resizing the image
+        this.logoLrIndustries.setPreserveRatio(true);
+        // Set the width of the logo to the width of the screen
+        this.logoLrIndustries.setFitWidth(this.WIDTH);
+
         // Little debug to see the width and the height of the screen for testing purposes
-        logoLrIndustries.setOnMouseClicked(event -> {
+        this.logoLrIndustries.setOnMouseClicked(event -> {
             System.out.println("Screen Width :" + Simulator.WIDTH);
             System.out.println("Screen Height :" + Simulator.HEIGHT);
             System.out.println("Simulator Width :" + simulatorStackPane.getWidth());
@@ -177,7 +182,7 @@ public class SettingsStackPane implements StackPaneMaker {
         final BorderPane timeElapsedBorderPane = new BorderPane();
 
         // Set the font of the label to Montserrat-Medium and the size to 20
-        this.timeElapsedLabel.setFont(FontUtils.getFont("Montserrat-Medium", 20));
+        this.timeElapsedLabel.setFont(FontUtils.getFont("Montserrat-Medium", LABEL_FONT_SIZE_SMALL));
         // Set the text color of the label to the label color
         this.timeElapsedLabel.setTextFill(LABEL_COLOR);
 
@@ -263,16 +268,16 @@ public class SettingsStackPane implements StackPaneMaker {
         // Create a HBox to hold the whole control center
         final HBox controlCenter = new HBox();
 
+        // Load the Montserrat font
+        final Font font = FontUtils.getFont("Montserrat-Medium", 14);
+
         // Add an image to the left of the controlCenter HBox (icons/black-hole.png in the resources' folder)
         final ImageView simulationStatusIcon = new ImageView(new Image("images/pause.png"));
         // Set the size of the image to 30x30
-        simulationStatusIcon.setFitHeight(30);
-        simulationStatusIcon.setFitWidth(30);
+        simulationStatusIcon.setFitHeight(font.getSize() * 1.9);
+        simulationStatusIcon.setFitWidth(font.getSize() * 1.9);
         // Add the actual image to the controlCenter HBox
         controlCenter.getChildren().add(simulationStatusIcon);
-
-        // Load the Montserrat font
-        final Font font = FontUtils.getFont("Montserrat-Medium", 16);
 
         // Create a start button to start the simulation
         final Button startButton = new Button("Start");
@@ -322,16 +327,16 @@ public class SettingsStackPane implements StackPaneMaker {
             gravitationalWavesStackPane.getAnimationTimer().stop();
             // Reset the black holes
             BLACK_HOLE_1.reset(
-                    SIMULATION_WIDTH * INCREASED_SURFACE_FACTOR / 2 - DEFAULT_POSITION_DIFFERENCE,
-                    SIMULATION_HEIGHT * INCREASED_SURFACE_FACTOR / 2,
+                    SIMULATION_WIDTH / 2 - DEFAULT_POSITION_DIFFERENCE,
+                    SIMULATION_HEIGHT / 2,
                     DEFAULT_BLACK_HOLE_VELOCITY,
                     DEFAULT_BLACK_HOLE_VELOCITY,
                     this.blackHole1Mass,
                     this.blackHole1Radius
             );
             BLACK_HOLE_2.reset(
-                    SIMULATION_WIDTH * INCREASED_SURFACE_FACTOR / 2 + DEFAULT_POSITION_DIFFERENCE,
-                    SIMULATION_HEIGHT * INCREASED_SURFACE_FACTOR / 2,
+                    SIMULATION_WIDTH / 2 + DEFAULT_POSITION_DIFFERENCE,
+                    SIMULATION_HEIGHT / 2,
                     -DEFAULT_BLACK_HOLE_VELOCITY,
                     -DEFAULT_BLACK_HOLE_VELOCITY,
                     this.blackHole2Mass,
@@ -344,7 +349,7 @@ public class SettingsStackPane implements StackPaneMaker {
             // Reset the time elapsed
             TIME_ELAPSED = 0;
             // Set the maximumFrequencyLabel to be not visible anymore
-            simulatorStackPane.maximumFrequencyLabel.setVisible(false);
+            simulatorStackPane.highestRecordedFrequency.setVisible(false);
             // Change the image to a pause icon
             simulationStatusIcon.setImage(new Image("images/pause.png"));
         });
@@ -401,7 +406,7 @@ public class SettingsStackPane implements StackPaneMaker {
             // Create a main title label
             final Label titleLabel = new Label("Information");
             // Set the font of the title label
-            titleLabel.setFont(FontUtils.getFont("Montserrat-Bold", 20));
+            titleLabel.setFont(FontUtils.getFont("Montserrat-Bold", LABEL_FONT_SIZE));
             // Set the color of the title label to the label color
             titleLabel.setTextFill(LABEL_COLOR);
 
@@ -470,7 +475,7 @@ public class SettingsStackPane implements StackPaneMaker {
         // Create a button with the text "Close"
         final Button closeButton = new Button("Close");
         // Set the font of the button to Montserrat-Bold with a size of 16
-        closeButton.setFont(FontUtils.getFont("Montserrat-Bold", 16));
+        closeButton.setFont(FontUtils.getFont("Montserrat-Bold", LABEL_FONT_SIZE_SMALL));
         // Set the background of the button to the background different color
         closeButton.setStyle("-fx-background-color: " + BACKGROUND_DIFFERENT_COLOR_HEX + "; -fx-text-fill: " + LABEL_COLOR_HEX + "; -fx-opacity: 0.0;");
         // Set the action of the button when the mouse enters it
@@ -599,10 +604,10 @@ public class SettingsStackPane implements StackPaneMaker {
             // Set the font size based on the Markdown syntax used in the line
             if (!markdownLine.equals("") && markdownLine.charAt(0) == '#') {
                 // Set the font of the label to Montserrat-Bold in size 16
-                label.setFont(FontUtils.getFont("Montserrat-Bold", 16));
+                label.setFont(FontUtils.getFont("Montserrat-Bold", LABEL_FONT_SIZE_SMALL));
             } else {
                 // Set the font of the label to Montserrat-Medium in size 16
-                label.setFont(FontUtils.getFont("Montserrat-Medium", 16));
+                label.setFont(FontUtils.getFont("Montserrat-Medium", LABEL_FONT_SIZE_SMALL));
             }
 
             // Check if the line is a link

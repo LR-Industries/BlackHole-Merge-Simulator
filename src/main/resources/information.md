@@ -1,6 +1,6 @@
 This application is a Black-Hole Merge Simulator made in Java 17 using JavaFX 20.
 It is made with <3 by Lucie Lebrun and Louis Ravignot Dos Santos on the behalf of LR Industries.
-The simulation was made for an ES-Physique project with Mr. Yoala (Called Abdelmalek in the "milieu")
+The simulation was made for an ES-Physique project with Mr. Yoala.
 
 The black holes' movement is computed using Newton's laws of gravitation (THE GOAT), Verlet algorithm and the Euler Method.
 The gravitational waves are computed using the formula of the Schwarzschild metric.

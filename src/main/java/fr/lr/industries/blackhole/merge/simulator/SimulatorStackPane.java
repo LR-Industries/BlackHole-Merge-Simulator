@@ -26,8 +26,8 @@ public class SimulatorStackPane implements StackPaneMaker {
     // The gc variable is used to store the graphics context of the canvas
     private final GraphicsContext gc;
 
-    // The maximumFrequencyLabel variable is used to store the maximum frequency label
-    public final Label maximumFrequencyLabel;
+    // The highestRecordedFrequency variable is used to store the maximum frequency label
+    public final Label highestRecordedFrequency;
 
     // The animationTimer variable is used to store the animation timer for the simulation
     private AnimationTimer animationTimer;
@@ -47,22 +47,22 @@ public class SimulatorStackPane implements StackPaneMaker {
         this.gc = this.canvas.getGraphicsContext2D();
 
         // Create the maximum frequency label
-        this.maximumFrequencyLabel = new Label();
-        // Set the text color of the maximumFrequencyLabel to the label frequency color
-        this.maximumFrequencyLabel.setTextFill(LABEL_FREQUENCY_COLOR);
-        // Set the font of the maximumFrequencyLabel
-        this.maximumFrequencyLabel.setFont(FontUtils.getFont("Montserrat-Bold", 20));
-        // Put the maximumFrequencyLabel at the left low corner of the screen
-        StackPane.setAlignment(this.maximumFrequencyLabel, Pos.TOP_LEFT);
-        // Set the maximumFrequencyLabel invisible
-        this.maximumFrequencyLabel.setVisible(false);
+        this.highestRecordedFrequency = new Label();
+        // Set the text color of the highestRecordedFrequency to the label frequency color
+        this.highestRecordedFrequency.setTextFill(LABEL_FREQUENCY_COLOR);
+        // Set the font of the highestRecordedFrequency
+        this.highestRecordedFrequency.setFont(FontUtils.getFont("Montserrat-Bold", 20));
+        // Put the highestRecordedFrequency at the left low corner of the screen
+        StackPane.setAlignment(this.highestRecordedFrequency, Pos.TOP_LEFT);
+        // Set the highestRecordedFrequency invisible
+        this.highestRecordedFrequency.setVisible(false);
     }
 
     // The getStackPane method is used to get the stack pane
     @Override
     public StackPane getStackPane() {
         // Create the stack pane from the border pane
-        final StackPane stackPane = new StackPane(new Pane(this.canvas, this.maximumFrequencyLabel, BLACK_HOLE_1.getEventHorizonCircle(), BLACK_HOLE_1.getBlackHoleCircle(), BLACK_HOLE_2.getEventHorizonCircle(), BLACK_HOLE_2.getBlackHoleCircle()));
+        final StackPane stackPane = new StackPane(new Pane(this.canvas, this.highestRecordedFrequency, BLACK_HOLE_1.getEventHorizonCircle(), BLACK_HOLE_1.getBlackHoleCircle(), BLACK_HOLE_2.getEventHorizonCircle(), BLACK_HOLE_2.getBlackHoleCircle()));
 
         // Draw the default canvas
         this.defaultCanvas();
@@ -128,11 +128,11 @@ public class SimulatorStackPane implements StackPaneMaker {
     // The defaultCanvas method is used to reset the canvas to its default state
     public void defaultCanvas() {
         // Clear the canvas
-        this.gc.clearRect(0, 0, this.WIDTH * INCREASED_SURFACE_FACTOR, this.HEIGHT * INCREASED_SURFACE_FACTOR);
+        this.gc.clearRect(0, 0, this.WIDTH, this.HEIGHT);
 
         // Fill the canvas with the background color
         this.gc.setFill(BACKGROUND_COLOR);
-        this.gc.fillRect(0, 0, this.WIDTH * INCREASED_SURFACE_FACTOR, this.HEIGHT * INCREASED_SURFACE_FACTOR);
+        this.gc.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 
         // Draw a border around the canvas with the border color
         this.gc.setStroke(BORDER_COLOR);
@@ -148,8 +148,8 @@ public class SimulatorStackPane implements StackPaneMaker {
     // The drawGrid method is used to draw a grid on the canvas
     private void drawGrid() {
         // Iterate through the x's and y's of the canvas
-        for (int x = 0; x < WIDTH * INCREASED_SURFACE_FACTOR; x += GRID_QUALITY) {
-            for (int y = 0; y < HEIGHT * INCREASED_SURFACE_FACTOR; y += GRID_QUALITY) {
+        for (int x = 0; x < WIDTH; x += GRID_QUALITY) {
+            for (int y = 0; y < HEIGHT; y += GRID_QUALITY) {
                 // Check if the x or y is a multiple of the grid cell size, if so, the pixel is a side of a grid cell
                 if (x % GRID_CELL_SIZE == 0 || y % GRID_CELL_SIZE == 0) {
                     // First, check if the pixel is not in the event horizon of the black holes to not waste computation time
@@ -196,10 +196,10 @@ public class SimulatorStackPane implements StackPaneMaker {
 
     // The showSimulationRecap method is used to show a little recap of the simulation
     private void showSimulationRecap() {
-        // Set the text of the maximumFrequencyLabel to the latest gravitational wave frequency
-        this.maximumFrequencyLabel.setText("Maximum Recorded Frequency: " + String.format("%.0f", gravitationalWavesStackPane.MAX_GRAVITATIONAL_WAVE_FREQUENCY) + " Hz");
-        // Show the maximumFrequencyLabel
-        this.maximumFrequencyLabel.setVisible(true);
+        // Set the text of the highestRecordedFrequency to the latest gravitational wave frequency
+        this.highestRecordedFrequency.setText("Highest Recorded Frequency: " + String.format("%.0f", gravitationalWavesStackPane.MAX_GRAVITATIONAL_WAVE_FREQUENCY) + " Hz");
+        // Show the highestRecordedFrequency
+        this.highestRecordedFrequency.setVisible(true);
     }
 
     // The getAnimationTimer method is used to get the animation timer for the simulation

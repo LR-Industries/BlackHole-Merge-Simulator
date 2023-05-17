@@ -6,10 +6,14 @@ import fr.lr.industries.blackhole.merge.gravitational.waves.GravitationalWavesSt
 import fr.lr.industries.blackhole.merge.settings.SettingsStackPane;
 import fr.lr.industries.blackhole.merge.simulator.BlackHole;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -32,7 +36,7 @@ public class Simulator extends Application {
     public static final double HEIGHT = Screen.getPrimary().getBounds().getHeight();
 
     // The SIMULATION_WIDTH and SIMULATION_HEIGHT constants are used to set the size of the simulation
-    public static final double SIMULATION_WIDTH = WIDTH - (WIDTH * 0.25); // The - (WIDTH * 0.25) will allow the window to occupy 75% of the screen's width
+    public static final double SIMULATION_WIDTH = WIDTH - (WIDTH * 0.20); // The - (WIDTH * 0.20) will allow the window to occupy 80% of the screen's width
     public static final double SIMULATION_HEIGHT = HEIGHT - (HEIGHT * 0.1); // The - (HEIGHT * 0.1) will allow the window to occupy 90% of the screen's height
 
     // The G constant is used to set the gravitational constant which I know by heart thanks to my so-called "physics" teacher named Mr. Eneman
@@ -61,6 +65,11 @@ public class Simulator extends Application {
     public static final Color LABEL_COLOR = Color.WHITE;
     public static final String LABEL_COLOR_HEX = "#FFFFFF";
 
+    // The LABEL_FONT_SIZE constant is used to set the font size of the label used everywhere in the simulation
+    public static final int LABEL_FONT_SIZE = 20;
+    // The LABEL_FONT_SIZE_SMALL constant is used to set the font size of the label used everywhere in the simulation
+    public static final int LABEL_FONT_SIZE_SMALL = 16;
+
     // The LABEL_FREQUENCY_COLOR constant is used to set the color of the label frequency used everywhere in the simulation
     public static final Color LABEL_FREQUENCY_COLOR = Color.GOLD;
 
@@ -71,13 +80,12 @@ public class Simulator extends Application {
     public static final double DEFAULT_BLACK_HOLE_MASS = 5.0e15;
     public static final double DEFAULT_BLACK_HOLE_RADIUS = 44.0; // 44 = LEWIS HAMILTON
     public static final double DEFAULT_BLACK_HOLE_VELOCITY = 7.5;
-    public static final double DEFAULT_POSITION_DIFFERENCE = 500.0;
-    public static final double INCREASED_SURFACE_FACTOR = 1.0;
+    public static final double DEFAULT_POSITION_DIFFERENCE = SIMULATION_WIDTH / 2.5;
 
     // The BLACK_HOLE_1 constant is used to set the first black hole
     public static BlackHole BLACK_HOLE_1 = new BlackHole(
-            SIMULATION_WIDTH * INCREASED_SURFACE_FACTOR / 2 - DEFAULT_POSITION_DIFFERENCE,
-            SIMULATION_HEIGHT * INCREASED_SURFACE_FACTOR / 2,
+            SIMULATION_WIDTH / 2 - DEFAULT_POSITION_DIFFERENCE,
+            SIMULATION_HEIGHT / 2,
             DEFAULT_BLACK_HOLE_VELOCITY,
             DEFAULT_BLACK_HOLE_VELOCITY,
             DEFAULT_BLACK_HOLE_MASS,
@@ -86,8 +94,8 @@ public class Simulator extends Application {
 
     // The BLACK_HOLE_2 constant is used to set the second black hole
     public static BlackHole BLACK_HOLE_2 = new BlackHole(
-            SIMULATION_WIDTH * INCREASED_SURFACE_FACTOR / 2 + DEFAULT_POSITION_DIFFERENCE,
-            SIMULATION_HEIGHT * INCREASED_SURFACE_FACTOR / 2,
+            SIMULATION_WIDTH / 2 + DEFAULT_POSITION_DIFFERENCE,
+            SIMULATION_HEIGHT / 2,
             -DEFAULT_BLACK_HOLE_VELOCITY,
             -DEFAULT_BLACK_HOLE_VELOCITY,
             DEFAULT_BLACK_HOLE_MASS,
@@ -120,17 +128,20 @@ public class Simulator extends Application {
         // Create a GridPane to hold the different StackPanes
         final GridPane gridPane = new GridPane();
         // Create a Scene to hold the GridPane
-        final Scene scene = new Scene(gridPane, WIDTH, HEIGHT, Color.BLACK);
+        final Scene scene = new Scene(gridPane, WIDTH, HEIGHT, BACKGROUND_COLOR);
 
         // Create the different StackPanes of the application
         simulatorStackPane = new SimulatorStackPane(SIMULATION_WIDTH, SIMULATION_HEIGHT);
-        settingsStackPane = new SettingsStackPane(primaryStage, WIDTH - (WIDTH * 0.75), HEIGHT - (HEIGHT * 0.1)); // The - (WIDTH * 0.75) will allow the window to occupy 25% of the screen's width and the - (HEIGHT * 0.1) will allow the window to occupy 90% of the screen's height
+        settingsStackPane = new SettingsStackPane(primaryStage, WIDTH - (WIDTH * 0.80), HEIGHT - (HEIGHT * 0.1)); // The - (WIDTH * 0.80) will allow the window to occupy 20% of the screen's width and the - (HEIGHT * 0.1) will allow the window to occupy 90% of the screen's height
         gravitationalWavesStackPane = new GravitationalWavesStackPane(WIDTH, HEIGHT - (HEIGHT * 0.9)); // The - (HEIGHT * 0.9) will allow the window to occupy 10% of the screen's height while occupying the full width of the screen
 
         // Add the StackPanes to the GridPane
         gridPane.add(simulatorStackPane.getStackPane(), 0, 0, 1, 1); // Put the stack pane in the top left corner of the screen
         gridPane.add(settingsStackPane.getStackPane(), 1, 0, 1, 1); // Put the stack pane in the top right corner of the screen
         gridPane.add(gravitationalWavesStackPane.getStackPane(), 0, 1, 2, 1); // Put the stack pane at the bottom of the screen
+
+        // Set the background of the GridPane to the BACKGROUND_COLOR constant
+        gridPane.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
 
         // Add a listener to the Scene to detect when the F11 key is pressed
         scene.setOnKeyPressed(event -> {
@@ -142,7 +153,7 @@ public class Simulator extends Application {
         });
 
         // Set the window to be full screen
-        //primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(true);
         // Set the full screen exit hint to be empty to hide the hint
         primaryStage.setFullScreenExitHint("");
         // Disable the default full screen exit key combination
